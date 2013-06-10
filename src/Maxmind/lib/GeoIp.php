@@ -2,6 +2,8 @@
 
 namespace Maxmind\lib;
 
+use Symfony\Component\Filesystem\Exception\IOException;
+
 /* -*- Mode: C; indent-tabs-mode: t; c-basic-offset: 2; tab-width: 2 -*- */
 /* geoip.inc
  *
@@ -391,7 +393,9 @@ class GeoIp {
         if ($this->flags & self::GEOIP_SHARED_MEMORY) {
             $this->shmid = @shmop_open (self::GEOIP_SHM_KEY, "a", 0, 0);
         } else {
-            $this->filehandle = fopen($this->filename,"rb") or die("Can not open $this->filename\n" );
+            if (!($this->filehandle = fopen($this->filename,"rb"))) {
+                throw new IOException("Can not open $this->filename");
+            } 
             if ($this->flags & self::GEOIP_MEMORY_CACHE) {
                 $s_array = fstat($this->filehandle);
                 $this->memory_buffer = fread($this->filehandle, $s_array['size']);
@@ -540,8 +544,8 @@ class GeoIp {
                     2 * $this->record_length * $offset,
                     2 * $this->record_length );
             } else {
-                fseek($this->filehandle, 2 * $this->record_length * $offset, SEEK_SET) == 0
-                    or die("fseek failed");
+                if (fseek($this->filehandle, 2 * $this->record_length * $offset, SEEK_SET) == 0)
+                    throw new IOException("fseek failed");
                 $buf = fread($this->filehandle, 2 * $this->record_length);
             }
             $x = array(0,0);
@@ -589,8 +593,8 @@ class GeoIp {
                     2 * $this->record_length * $offset,
                     2 * $this->record_length );
             } else {
-                fseek($this->filehandle, 2 * $this->record_length * $offset, SEEK_SET) == 0
-                    or die("fseek failed");
+                if (fseek($this->filehandle, 2 * $this->record_length * $offset, SEEK_SET) == 0)
+                    throw new IOException("fseek failed");
                 $buf = fread($this->filehandle, 2 * $this->record_length);
             }
             $x = array(0,0);
