@@ -393,9 +393,8 @@ class GeoIp {
         if ($this->flags & self::GEOIP_SHARED_MEMORY) {
             $this->shmid = @shmop_open (self::GEOIP_SHM_KEY, "a", 0, 0);
         } else {
-            if (!($this->filehandle = fopen($this->filename,"rb"))) {
+            if (!($this->filehandle = fopen($this->filename,"rb")))
                 throw new IOException("Can not open $this->filename");
-            } 
             if ($this->flags & self::GEOIP_MEMORY_CACHE) {
                 $s_array = fstat($this->filehandle);
                 $this->memory_buffer = fread($this->filehandle, $s_array['size']);
