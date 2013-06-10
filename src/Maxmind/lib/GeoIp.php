@@ -543,7 +543,7 @@ class GeoIp {
                     2 * $this->record_length * $offset,
                     2 * $this->record_length );
             } else {
-                if (fseek($this->filehandle, 2 * $this->record_length * $offset, SEEK_SET) == 0)
+                if (fseek($this->filehandle, 2 * $this->record_length * $offset, SEEK_SET) == -1)
                     throw new IOException("fseek failed");
                 $buf = fread($this->filehandle, 2 * $this->record_length);
             }
@@ -592,7 +592,7 @@ class GeoIp {
                     2 * $this->record_length * $offset,
                     2 * $this->record_length );
             } else {
-                if (fseek($this->filehandle, 2 * $this->record_length * $offset, SEEK_SET) == 0)
+                if (fseek($this->filehandle, 2 * $this->record_length * $offset, SEEK_SET) == -1)
                     throw new IOException("fseek failed");
                 $buf = fread($this->filehandle, 2 * $this->record_length);
             }
